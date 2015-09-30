@@ -28,27 +28,6 @@ These are the packages that will be used. The library command calls up the packa
 
 ```r
 library(dplyr)
-```
-
-```
-## 
-## Attaching package: 'dplyr'
-## 
-## The following objects are masked from 'package:plyr':
-## 
-##     arrange, count, desc, failwith, id, mutate, rename, summarise,
-##     summarize
-## 
-## The following objects are masked from 'package:stats':
-## 
-##     filter, lag
-## 
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-```
-
-```r
 library(ggplot2)
 library(gridExtra)
 ```
@@ -56,7 +35,7 @@ library(gridExtra)
 
 ### Downloading and Storing Storm Data
 
-Here, the data on Severe Weather Events in the United States is downloaded from the following URL. Once it is downloaded, it is saved in the working directory. Next, it is stored in the variable **storm_data**. From this point on in the report, **storm_data** will represent the Severe Weather data.
+Here, the data on Severe Weather Events in the United States is downloaded from the following URL. Once it is downloaded, it is saved in the working directory. Next, it is stored in the variable `storm_data`. From this point on in the report, `storm_data` will represent the Severe Weather data.
 
 
 ```r
@@ -70,7 +49,7 @@ storm_data    <-  read.csv("StormData.csv.bz2")
 
 #### Storm Data Summary
 
-We check the summary of **storm_data** to get an idea of some of the parameters of the data.
+We check the summary of `storm_data` to get an idea of some of the parameters of the data.
 
 
 ```r
@@ -225,7 +204,7 @@ head(storm_data)
 
 
 #### Summary and List of Storm Event Types
-Finally, we take a look at the different kinds of weather events that are listed in **storm_data**. Although there are plenty listed here, this report focuses on the events that caused the most economic and public health damage. 
+Finally, we take a look at the different kinds of weather events that are listed in `storm_data`. Although there are plenty listed here, this report focuses on the events that caused the most economic and public health damage. 
 
 
 ```r
@@ -306,14 +285,16 @@ summary(storm_data$EVTYPE)
 
 ### Assigning Variables 
 In this section we will be assigning variables to be used in the R Coding. This step makes the data easy to use. Also it is a great way to demonstrate the steps used to build our plots. 
+
 #### Event
-The different weather events from **storm_data** are stored in the variable **event**.
+
+The different weather events from `storm_data` are stored in the variable `event`.
 
 ```r
 event                 <-  storm_data$EVTYPE
 ```
 #### Fatalities
-Here the fatalities from each weather event in **storm_data** are stored in the variable **fatalities**. Next the variable **sum_fatalities** is created. **sum_fatalities** is the sum of all the **fatalities** caused by each **event**. Finally, we create **top_10_fatalities**, which is a variable where the top ten fatalities are ordered and listed.
+Here the fatalities from each weather event in `storm_data` are stored in the variable `fatalities`. Next the variable `sum_fatalities` is created. `sum_fatalities` is the sum of all the `fatalities` caused by each `event`. Finally, we create `top_10_fatalities`, which is a variable where the top ten fatalities are ordered and listed.
 
 ```r
 fatalities            <-  storm_data$FATALITIES
@@ -321,7 +302,7 @@ sum_fatalities        <-  aggregate(fatalities~event, storm_data, sum, na.rm=TRU
 top_10_fatalities     <-  sum_fatalities[order(-sum_fatalities$fatalities), ][1:10, ]
 ```
 #### Injuries
-The same process used to create **fatalities**, **sum_fatalities**, and **top_10_fatalities** are used to create the variables **injuries**, **sum_injuries**, and **top_10_injuries**.  
+The same process used to create `fatalities`, `sum_fatalities`, and `top_10_fatalities` are used to create the variables `injuries`, `sum_injuries`, and `top_10_injuries`.  
   
 These two sets of variables are used to determine the cost to public health from each weather event.
 
@@ -331,9 +312,9 @@ sum_injuries          <-  aggregate(injuries~event, storm_data, sum, na.rm=TRUE)
 top_10_injuries       <-  sum_injuries[order(-sum_injuries$injuries), ][1:10, ]
 ```
 #### Crop Exponent
-Our next step is to figure out the economic damage. So we will look at the cost of property damage and crop damage caused by each weather event. From the data in **storm_data** we see that crop damage and property damage are listed with an accompanying exponent. These exponents are "H", "K", "M", and "B", which respectively denote hundreds, thousands, millions, and billions of dollars.   
+Our next step is to figure out the economic damage. So we will look at the cost of property damage and crop damage caused by each weather event. From the data in `storm_data` we see that crop damage and property damage are listed with an accompanying exponent. These exponents are "H", "K", "M", and "B", which respectively denote hundreds, thousands, millions, and billions of dollars.   
   
-So we create the variable **crop_exponent**, which is a list of all the crop damage exponents listed in **storm_data**. Next we tell R to read **crop_exponent** as a character. After that we tell R to change "H" to "2", "K" to "3", "M" to "6", and "B" to "9". These numbers correspond to the exponential power represented by each letter. The next step in our code tells R to return any data not listed as an "H", "K", "M", or "B" in **crop_exponent** as a "0". The final code tells R to read **crop_exponent** as a numeric.
+So we create the variable `crop_exponent`, which is a list of all the crop damage exponents listed in `storm_data`. Next we tell R to read `crop_exponent` as a character. After that we tell R to change "H" to "2", "K" to "3", "M" to "6", and "B" to "9". These numbers correspond to the exponential power represented by each letter. The next step in our code tells R to return any data not listed as an "H", "K", "M", or "B" in `crop_exponent` as a "0". The final code tells R to read `crop_exponent` as a numeric.
 
 ```r
 crop_exponent         <-  storm_data$CROPDMGEXP
@@ -350,9 +331,9 @@ crop_exponent         <-  as.numeric(crop_exponent)
 ## Warning: NAs introduced by coercion
 ```
 #### Crop Damage
-This next section is a follow up to the previous section. All crop damage listed in **storm_data** is listed with a crop damage number value and a crop damage exponent. The crop damage exponents were all manipulated and stored in the variable **crop_exponent** in the previous section.  
+This next section is a follow up to the previous section. All crop damage listed in `storm_data` is listed with a crop damage number value and a crop damage exponent. The crop damage exponents were all manipulated and stored in the variable `crop_exponent` in the previous section.  
   
-Here we manipulate the data listed in the column crop damage and store it in the variable **crop_damage**. Next we multiply the values stored in **crop_damage** by 10 raised to the exponent stored in the variable **crop_exponent**. This gives us the total value of the crop damage listed in **storm_data**. This value is stored in the variable **crop_damage**, which replaces its previous value. Next we add up all the **crop_damage** listed in **storm_data** by weather event. This value is stored in the variable **sum_crop_damage**. After this we tell R to list the top 10 causes of **crop_damage** caused by weather event and store it in the variable **top_10_crop**.
+Here we manipulate the data listed in the column crop damage and store it in the variable `crop_damage`. Next we multiply the values stored in `crop_damage` by 10 raised to the exponent stored in the variable `crop_exponent`. This gives us the total value of the crop damage listed in `storm_data`. This value is stored in the variable `crop_damage`, which replaces its previous value. Next we add up all the `crop_damage` listed in `storm_data` by weather event. This value is stored in the variable `sum_crop_damage`. After this we tell R to list the top 10 causes of `crop_damage` caused by weather event and store it in the variable `top_10_crop`.
 
 ```r
 crop_damage           <-  storm_data$CROPDMG
@@ -361,7 +342,7 @@ sum_crop_damage       <-  aggregate(crop_damage~event, storm_data, sum, na.rm=TR
 top_10_crop           <-  sum_crop_damage[order(-sum_crop_damage$crop_damage), ][1:10, ]
 ```
 #### Property Exponent
-The same process used to create the variable **crop_exponent** is used to create the variable **property_exponent**.
+The same process used to create the variable `crop_exponent` is used to create the variable `property_exponent`.
 
 ```r
 property_exponent     <-  storm_data$PROPDMGEXP
@@ -378,7 +359,7 @@ property_exponent     <-  as.numeric(property_exponent)
 ## Warning: NAs introduced by coercion
 ```
 #### Property Damage
-The same process used to create the variables **crop_damage**, **sum_crop_damage** and **top_10_crop** are used to create the variables **property_damage**, **sum_property_damage** and **top_10_property**. This gives us the top 10 causes of property damage for weather events in **storm_data**
+The same process used to create the variables `crop_damage`, `sum_crop_damage` and `top_10_crop` are used to create the variables `property_damage`, `sum_property_damage` and `top_10_property`. This gives us the top 10 causes of property damage for weather events in `storm_data`.
 
 ```r
 property_damage       <-  storm_data$PROPDMG
@@ -392,11 +373,11 @@ top_10_property       <- sum_property_damage[order(-sum_property_damage$property
 
 ### Weather Events with Highest Health Consequences (Fatalities and Injuries)
 
-In this section we will look at the results of the data analyis of **storm_data**. By the end, we will see the top 10 weather events that cause **fatalities**, **injuries**, **crop_damage** and **property_damage**. This analysis will show us the impact on public health and immediate economic consequences caused by each weather event.
+In this section we will look at the results of the data analyis of `storm_data`. By the end, we will see the top 10 weather events that cause `fatalities`, `injuries`, `crop_damage` and `property_damage`. This analysis will show us the impact on public health and immediate economic consequences caused by each weather event.
 
 #### Fatalities from Weather Events
 
-Here we tell R to display the variable **top_10_fatalities**, which tells us which weather events caused the most fatalities. 
+Here we tell R to display the variable `top_10_fatalities`, which tells us which weather events caused the most fatalities. 
 
 
 ```r
@@ -418,7 +399,7 @@ top_10_fatalities
 ```
 #### Injuries from Weather Events
 
-Next we tell R to show the variable **top_10_injuries**, which shows which weather events caused the most injuries. 
+Next we tell R to show the variable `top_10_injuries`, which shows which weather events caused the most injuries. 
 
 
 ```r
@@ -440,7 +421,7 @@ top_10_injuries
 ```
 #### Graphs for Fatalities and Injuries from Weather Events
 
-Next we use the ggplot command in R to graph the data stored in **top_10_fatalities** and **top_10_injuries** as bar graphs. The first one shows how many **fatalities** were caused by each weather event. The next one shows the amount of **injuries** caused by each weather event. The code shows how each graph was labeled. It also shows how the weather events listed in the x-axis are made to be at a 90 degree angle. These graphs are stored in the variables **fatalities_graph** and **injuries_graph**. Finally the graphs stored in the variables **fatalities_graph** and **injuries_graph** are used as arguments in the command **grid.arrange** along with an argument **ncol=2**, which tell the command **grid.arrange** to use two columns. These arguments in the command **grid.arrange** make the two graphs be put together side by side.
+Next we use the ggplot command in R to graph the data stored in `top_10_fatalities` and `top_10_injuries` as bar graphs. The first one shows how many `fatalities` were caused by each weather event. The next one shows the amount of `injuries` caused by each weather event. The code shows how each graph was labeled. It also shows how the weather events listed in the x-axis are made to be at a 90 degree angle. These graphs are stored in the variables `fatalities_graph` and `injuries_graph`. Finally the graphs stored in the variables `fatalities_graph` and `injuries_graph` are used as arguments in the command `grid.arrange` along with an argument `ncol=2`, which tell the command `grid.arrange` to use two columns. These arguments in the command `grid.arrange` make the two graphs be put together side by side.
 
 ```r
 fatalities_graph  <-  ggplot(top_10_fatalities, aes(event, fatalities)) + geom_bar(stat="identity") + labs(title="Fatalities", x="Weather Event", y="Fatalities") + theme(axis.text.x=element_text(angle=90))
@@ -456,7 +437,7 @@ grid.arrange(fatalities_graph, injuries_graph, ncol=2)
 
 #### Crop Damages from Weather Events
 
-Here we display the variable **top_10_crop** which shows us which weather events caused the most crop damage.
+Here we display the variable `top_10_crop` which shows us which weather events caused the most crop damage.
 
 
 ```r
@@ -478,7 +459,7 @@ top_10_crop
 ```
 #### Property Damages from Weather Events
 
-Then we display **top_10_property**, which shows which weather events caused the most property damage.
+Then we display `top_10_property`, which shows which weather events caused the most property damage.
 
 
 ```r
@@ -514,5 +495,5 @@ grid.arrange(crop_graph, property_graph, ncol=2)
 
 #CONCLUSION
 
-From the data that was stored in **storm_data** we can see which weather events had the most immediate economic and public health consequences. We see that tornados caused the most **fatalities** and **injuries**. Not only did they cause the most damage to public health, but they beat out the next weather events by far. From the results we see that droughts cause the most crop damage and floods cause the most property damage. Therefore, the weather event that has the biggest immediate economic consequences differs with respect to crop damage and property damage.
+From the data that was stored in `storm_data` we can see which weather events had the most immediate economic and public health consequences. We see that tornados caused the most `fatalities` and `injuries`. Not only did they cause the most damage to public health, but they beat out the next weather events by far. From the results we see that droughts cause the most crop damage and floods cause the most property damage. Therefore, the weather event that has the biggest immediate economic consequences differs with respect to crop damage and property damage.
 
